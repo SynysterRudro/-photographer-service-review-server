@@ -22,6 +22,20 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://photoMania:tpUweRoR5Xx08jSB@cluster0.akihfew.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+async function run() {
+    const serviceCollection = client.db('photoMania').collection('services');
+
+    // limiting 3 services
+    app.get('/servicesLimit', async (req, res) => {
+        const query = {}
+        const cursor = serviceCollection.find(query);
+        const products = await cursor.limit(3).toArray();
+        res.send(products);
+    });
+
+}
+run().catch(err => console.error(err))
+
 
 app.listen(port, () => {
     console.log('running from port - ', port);
