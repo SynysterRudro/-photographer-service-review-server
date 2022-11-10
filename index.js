@@ -24,6 +24,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     const serviceCollection = client.db('photoMania').collection('services');
+    const reviewsCollection = client.db('photoMania').collection('reviews');
 
     // limiting 3 services
     app.get('/servicesLimit', async (req, res) => {
@@ -48,6 +49,16 @@ async function run() {
         const query = { _id: ObjectId(id) };
         const services = await serviceCollection.findOne(query);
         res.send(services);
+    })
+
+
+    // reviews links 
+
+    app.get('/reviews', async (req, res) => {
+        const query = {};
+        const cursor = reviewsCollection.find(query);
+        const reviews = await cursor.toArray();
+        res.send(reviews);
     })
 
 }
