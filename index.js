@@ -58,7 +58,13 @@ async function run() {
     // reviews links 
 
     app.get('/reviews', async (req, res) => {
-        const query = {};
+        // console.log(req.query.service_id);
+        let query = {};
+        if (req.query.service_id) {
+            query = {
+                service_id: req.query.service_id
+            }
+        }
         const cursor = reviewsCollection.find(query);
         const reviews = await cursor.toArray();
         res.send(reviews);
