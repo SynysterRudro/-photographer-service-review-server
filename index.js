@@ -7,6 +7,9 @@ const app = express();
 
 const jwt = require('jsonwebtoken');
 
+// dot env environment variable 
+require('dotenv').config();
+
 // middlewares
 
 app.use(cors());
@@ -19,7 +22,7 @@ app.get('/', (req, res) => {
 // connecting mongo db 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = "mongodb+srv://photoMania:tpUweRoR5Xx08jSB@cluster0.akihfew.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.akihfew.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
@@ -59,6 +62,13 @@ async function run() {
         const cursor = reviewsCollection.find(query);
         const reviews = await cursor.toArray();
         res.send(reviews);
+    })
+
+    // posting reviews
+    app.post('/reviews', async (req, res) => {
+        const review = req.body;
+        const result = await reviewsCollection.insertOne(review);
+        res.send(result);
     })
 
 }
